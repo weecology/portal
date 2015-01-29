@@ -2,16 +2,16 @@ import pandas as pd
 import numpy as np
 import jdcal
 
-def generate_trappingtable(raw_sample_data):
+def generate_trappingtable(data):
     """Generates master table of when each plot has been sampled or missed. 
-    Input: Pandas Dataframe with the following columns
+    Input: Pandas Dataframe with the containing the following columns
     plot - plot number
     period - portal project period code, unique for each month of trapping
     yr - year sample occured
     mo - month sample occurred
     dy - day sample occurred
     
-    Outputs: Pandas dataframe with following columns
+    Outputs: New pandas dataframe with only the following columns
     yr - year in input data
     mo - month in input data
     dy - day in input data
@@ -23,7 +23,9 @@ def generate_trappingtable(raw_sample_data):
     
     # reduce to unique plot/period events & add column denoting that
     # records are linked to real trapping events
-    
+    cols = [col for col in data.columns if col in ['plot', 'period', 'yr', 'mo',
+                                                   'dy']]
+    raw_sample_data = data[cols]
     raw_sample_data = raw_sample_data.dropna(subset=["plot"])
     raw_sample_data = raw_sample_data.dropna(subset=["period"])
     Trapping_Table = raw_sample_data.drop_duplicates()
