@@ -2,9 +2,17 @@ library(plyr)
 
 
 ### FUNCTION
+#### This file takes the raw NDVI file that has the day-level images from
+#### multiple satellites and reduces that to monthly values. There are a
+#### few months that are still missing data, these are filled in by taking
+#### the mean from the months flanking the missing data.
+
+### FUNCTIONS
 
 convert_julianday_to_monthyr = function(Year, JulianDay){
 
+  # Converts separate Julian Day and Yr COlumns from a 
+  # dataframe to a single Year-month format
   
   combined <- paste(Year, JulianDay, sep="-")
   full_date = as.Date(strptime(combined, format="%Y-%j"), format="%m-d-%Y")
@@ -17,7 +25,9 @@ convert_julianday_to_monthyr = function(Year, JulianDay){
 
 data = read.csv(file = "Landsat_NDVI_adj_allsats.csv")
 
-# Add time identifiers
+# Processing data from Main Processing file (LANDSAT.R) to monthly
+# summaries compatible with timeseries analysis. 
+
 data$date = convert_julianday_to_monthyr(data$Year, data$JulDay)
 
 month_w_NAs = ddply(data, ~ date, summarise,
@@ -43,3 +53,5 @@ for (row in NA_row_info$NA_rows){
   month_wo_NAs[row,]$median = NA_row_info[i,]$mean
   i= i+1
 }
+
+write.csv(month_wo_NAs, "Monthly_NDVI.csv")
