@@ -25,7 +25,7 @@ add_missing_months = function(df){
   first_date = as.Date(min(df$current_date))
   end_date = as.Date(max(df$current_date))
   full = seq(from=first_date, to=end_date, by='1 month') 
-  data.frame(Date=full, NDVI = month_missingdates$median[match(full,month_missingdates$current_dates)])
+  data.frame(Date=full, NDVI = df$median[match(full,df$current_dates)])
 }
 
 ### MAIN CODE
