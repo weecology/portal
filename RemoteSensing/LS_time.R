@@ -61,3 +61,7 @@ year_scale = ddply(month_scale, ~ Year, summarise,
                     sd = sd(median, na.rm=TRUE))
 plot(year_scale$Year, year_scale$median)
 lines(year_scale$Year, year_scale$median, type = "o", col="black")
+
+write.csv(month_scale, "monthly_NDVI.csv")
+# monthly_NDVI: median NDVI from all images from that month. N is the number
+# of images used to calculate the median. 
