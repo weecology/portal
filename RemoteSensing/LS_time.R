@@ -50,13 +50,14 @@ month_scale = ddply(data, c("Year", "month"), summarise,
 month_scale$season = add_season(as.vector(month_scale$month),seasons)
 month_scale$colors = add_season_colors(as.vector(month_scale$season), 
                                        color_list)
+
 time = as.vector(month_scale$Year) + as.vector(month_scale$month)/12
 plot(time, month_scale$median, col=month_scale$colors)
 lines(time, month_scale$median, type = "o", col="black")
 
-year_scale = ddply(data, c("Year"), summarise,
-                   N = sum(!is.na(NDVI)),
-                   median = median(NDVI, na.rm=TRUE),
-                   sd = sd(NDVI, na.rm=TRUE))
+year_scale = ddply(month_scale, ~ Year, summarise,
+                    N = sum(!is.na(median)),
+                    median = median(median, na.rm=TRUE),
+                    sd = sd(median, na.rm=TRUE))
 plot(year_scale$Year, year_scale$median)
 lines(year_scale$Year, year_scale$median, type = "o", col="black")
