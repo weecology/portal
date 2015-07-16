@@ -16,10 +16,17 @@ convert_julianday_to_monthyr = function(Year, JulianDay){
   
   combined <- paste(Year, JulianDay, sep="-")
   full_date = as.Date(strptime(combined, format="%Y-%j"), format="%m-d-%Y")
-  date = as.Date(full_date, format="%Y-%j")
+  date = as.Date(combined, format="%Y-%j")
   strftime(date, "%Y-%m")
 }
 
+add_missing_months = function(df){
+  df$current_dates = as.Date(paste(df$date,"-",15,sep=""))
+  first_date = as.Date(min(df$current_date))
+  end_date = as.Date(max(df$current_date))
+  full = seq(from=first_date, to=end_date, by='1 month') 
+  data.frame(Date=full, NDVI = month_missingdates$median[match(full,month_missingdates$current_dates)])
+}
 
 ### MAIN CODE
 
@@ -34,12 +41,9 @@ month_missingdates = ddply(data, ~ date, summarise,
                     N = sum(!is.na(NDVI)),
                     median = median(NDVI, na.rm=TRUE),
                     sd = sd(NDVI, na.rm=TRUE))
+all_months = add_missing_months(month_missingdates)
+all_months$date = strftime(as.Date(all_months$Date), "%Y-%m")
+all_months = data.frame(all_months$date, all_months$NDVI)
+colnames(all_months) = c("Date","NDVI")
 
-month_missingdates$current_dates = as.Date(paste(month_missingdates$date,"-",15,sep=""))
-first_date = as.Date(min(month_missingdates$current_date))
-end_date = as.Date(max(month_missingdates$current_date))
-
-full = seq(from=first_date, to=end_date, by='1 month') 
-
-all_months = data.frame(Date=full, NDVI = month_missingdates$median[match(full,month_missingdates$current_dates)])
 write.csv(all_months, "Monthly_NDVI.csv")
