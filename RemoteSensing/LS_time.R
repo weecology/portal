@@ -37,7 +37,7 @@ data$month = add_month(data)
 seasons = list(winter_first=1:2, spring=3:5, summer=6:8,
                fall=9:11, winter_end=12)
 color_list = list(winter="blue", spring="chartreuse", 
-                  summer="forestgreen", fall="orange")
+                  summer="forestgreen", fall="brown")
 data$wateryr = ifelse(data$month <= max(seasons$fall),data$Year,
                       data$Year+1)
 
@@ -48,12 +48,12 @@ month_scale = ddply(data, c("Year", "month"), summarise,
                     median = median(NDVI, na.rm=TRUE),
                     sd = sd(NDVI, na.rm=TRUE))
 month_scale$season = add_season(as.vector(month_scale$month),seasons)
-month_scale$colors = add_season_colors(as.vector(month_scale$season), 
+data_colors = add_season_colors(as.vector(month_scale$season), 
                                        color_list)
 
 time = as.vector(month_scale$Year) + as.vector(month_scale$month)/12
-plot(time, month_scale$median, col=month_scale$colors)
-lines(time, month_scale$median, type = "o", col="black")
+plot(time, month_scale$median, type='o', col=data_colors)
+
 
 year_scale = ddply(month_scale, ~ Year, summarise,
                     N = sum(!is.na(median)),
