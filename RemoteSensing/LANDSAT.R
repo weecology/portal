@@ -178,5 +178,5 @@ NDVI_L8 = make_core_version(LS8, LS8$new_NDVI)
 
 NDVI_all = rbind_list(NDVI_L5, NDVI_L7off, NDVI_L7on, NDVI_L8)
 NDVI_all$NDVI = NDVI_all$NDVI*0.0001
-
+NDVI_all = NDVI_all[NDVI_all$Year!=1982, ]
 write.csv(NDVI_all, file = "Landsat_NDVI_adj_allsats.csv")
