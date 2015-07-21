@@ -64,7 +64,7 @@ Apply_correction = function(df_NDVI, correction){
 ### MAIN CODE
 
 data = read.csv("ModisNDVI_MOD_clean_summary.csv")
-landsat = read.csv("monthly_NDVI.csv")
+landsat = read.csv("monthly_Landsat_NDVI.csv")
 
 # Processing data from Main Processing file (LANDSAT.R) to monthly
 # summaries compatible with timeseries analysis. 
@@ -82,3 +82,8 @@ merged = merge(modis, landsat, by.x = "date", by.y="Date", all.y = TRUE)
 
 na_rows = which(is.na(merged$NDVI))
 merged$NDVI[na_rows] <- merged$median_new[na_rows]
+
+merged = data.frame(merged$date, merged$NDVI)
+colnames(merged) = c("Date","NDVI")
+
+write.csv(merged, "Monthly_NDVI.csv")
