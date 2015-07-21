@@ -15,7 +15,6 @@ convert_julianday_to_monthyr = function(Year, JulianDay){
   # dataframe to a single Year-month format
   
   combined <- paste(Year, JulianDay, sep="-")
-  full_date = as.Date(strptime(combined, format="%Y-%j"), format="%m-d-%Y")
   date = as.Date(combined, format="%Y-%j")
   strftime(date, "%Y-%m")
 }
