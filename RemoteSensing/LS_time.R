@@ -45,4 +45,4 @@ all_months$date = strftime(as.Date(all_months$Date), "%Y-%m")
 all_months = data.frame(all_months$date, all_months$NDVI)
 colnames(all_months) = c("Date","NDVI")
 
-write.csv(all_months, "Monthly_NDVI.csv")
+write.csv(all_months, "Monthly__Landsat_NDVI.csv")
